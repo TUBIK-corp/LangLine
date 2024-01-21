@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Documents;
 using static System.Net.Mime.MediaTypeNames;
-using LangContext = LangLine.LangLine;
+using LangContext = LangLine.LangLineCore;
 
 namespace IspolnitelCherepashka.Models
 {
@@ -25,10 +25,10 @@ namespace IspolnitelCherepashka.Models
         public delegate void ExceptionCatch(int index, string exMessage);
         public event ExceptionCatch ExceptionCatched;
 
-        public List<InterpreterLine> CommandList;
+        public List<InterpreterLine> CommandList { get; private set; }
 
-        public Dictionary<string, Type> CommandTypeBinds;
-        public LangContext Context;
+        public Dictionary<string, Type> CommandTypeBinds { get; private set; }
+        public LangContext Context { get; private set; }
 
         public Interpreter(LangContext langLine)
         {
@@ -61,7 +61,7 @@ namespace IspolnitelCherepashka.Models
             CommandList.Clear();
             for (int i = 0; i < stringList.Count; i++)
             {
-                if (String.IsNullOrEmpty(CommandList[i].Line))
+                if (string.IsNullOrEmpty(stringList[i]))
                     continue;
                 CommandList.Add(new InterpreterLine(i, stringList[i].TrimEnd('\n').TrimEnd('\r').Replace('\\', '/')));
             }
@@ -109,7 +109,7 @@ namespace IspolnitelCherepashka.Models
             var arguments_line = "";
             if (parts.Length > 0)
             {
-                arguments_line = String.Join(" ", parts.Skip(1));
+                arguments_line = string.Join(" ", parts.Skip(1));
             }
 
             var command_type = TypifyCommand(command_name);
@@ -130,7 +130,7 @@ namespace IspolnitelCherepashka.Models
 
         public void StartProgram()
         {
-            if (CommandList is null)
+            if (CommandList == null)
             {
                 throw new Exception("CommandList is empty");
             }

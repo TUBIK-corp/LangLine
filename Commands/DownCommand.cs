@@ -9,7 +9,7 @@ namespace IspolnitelCherepashka.Commands
 {
     public class DownCommand : MoveCommand
     {
-        public DownCommand(LangLine.LangLine langLine) : base(langLine) { }
+        public DownCommand(LangLine.LangLineCore langLine) : base(langLine) { }
 
         public override string CommandName { get; } = "DOWN";
 

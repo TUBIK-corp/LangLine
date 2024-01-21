@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-using LangContext = LangLine.LangLine;
+using LangContext = LangLine.LangLineCore;
 
 namespace IspolnitelCherepashka.Commands
 {

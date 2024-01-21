@@ -9,7 +9,7 @@ namespace IspolnitelCherepashka.Commands
 {
     public class UpCommand : MoveCommand
     {
-        public UpCommand(LangLine.LangLine langLine) : base(langLine) { }
+        public UpCommand(LangLine.LangLineCore langLine) : base(langLine) { }
 
         public override string CommandName { get; } = "UP";
 

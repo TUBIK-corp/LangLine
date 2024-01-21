@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 using System.Windows.Ink;
-using LangContext = LangLine.LangLine;
+using LangContext = LangLine.LangLineCore;
 
 namespace IspolnitelCherepashka.Commands
 {

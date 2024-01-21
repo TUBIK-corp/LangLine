@@ -11,13 +11,13 @@ namespace IspolnitelCherepashka.Commands
 {
     public class RightCommand : MoveCommand
     {
-        public RightCommand(LangLine.LangLine langLine) : base(langLine) { }
+        public RightCommand(LangLine.LangLineCore langLine) : base(langLine) { }
 
         public override string CommandName { get; } = "RIGHT";
 
         public override void Execute()
         {
-            App.MainField.MoveUser(Direction.RIGHT, MoveSteps);
+            Context.MainField.MoveUser(Direction.RIGHT, MoveSteps);
         }
     }
 }

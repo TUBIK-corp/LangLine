@@ -1,5 +1,5 @@
 ﻿
-using LangContext = LangLine.LangLine;
+using LangContext = LangLine.LangLineCore;
 
 namespace IspolnitelCherepashka.Interfaces
 {

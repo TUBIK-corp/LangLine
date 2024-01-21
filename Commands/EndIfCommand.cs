@@ -8,7 +8,7 @@ namespace IspolnitelCherepashka.Commands
 {
     public class EndIfCommand : EndCommand
     {
-        public EndIfCommand(LangLine.LangLine langLine) : base(langLine) { }
+        public EndIfCommand(LangLine.LangLineCore langLine) : base(langLine) { }
 
         public override string CommandName { get; } = "ENDIF";
     }

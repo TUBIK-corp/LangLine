@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using static IspolnitelCherepashka.Commands.ProcedureCommand;
-using LangContext = LangLine.LangLine;
+using LangContext = LangLine.LangLineCore;
 
 
 namespace IspolnitelCherepashka.Commands

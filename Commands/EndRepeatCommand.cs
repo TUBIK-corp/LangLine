@@ -8,7 +8,7 @@ namespace IspolnitelCherepashka.Commands
 {
     public class EndRepeatCommand : EndCommand
     {
-        public EndRepeatCommand(LangLine.LangLine langLine) : base(langLine) { }
+        public EndRepeatCommand(LangLine.LangLineCore langLine) : base(langLine) { }
         public override string CommandName { get; } = "ENDREPEAT";
     }
 }

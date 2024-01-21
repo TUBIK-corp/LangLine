@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>b7fa626e-0713-4f6b-b5ce-50b5725eecad</ProjectGuid>
+    <ProjectGuid>{B7FA626E-0713-4F6B-B5CE-50B5725EECAD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LangLine</RootNamespace>
@@ -31,24 +31,48 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System"/>
-    
-    <Reference Include="System.Core"/>
-    <Reference Include="System.Xml.Linq"/>
-    <Reference Include="System.Data.DataSetExtensions"/>
-    
-    
-    <Reference Include="Microsoft.CSharp"/>
-    
-    <Reference Include="System.Data"/>
-    
-    <Reference Include="System.Net.Http"/>
-    
-    <Reference Include="System.Xml"/>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Commands\CallCommand.cs" />
+    <Compile Include="Commands\DownCommand.cs" />
+    <Compile Include="Commands\EndCommand.cs" />
+    <Compile Include="Commands\EndIfCommand.cs" />
+    <Compile Include="Commands\EndProcedureCommand.cs" />
+    <Compile Include="Commands\EndRepeatCommand.cs" />
+    <Compile Include="Commands\IfBlockCommand.cs" />
+    <Compile Include="Commands\LeftCommand.cs" />
+    <Compile Include="Commands\MoveCommand.cs" />
+    <Compile Include="Commands\ProcedureCommand.cs" />
+    <Compile Include="Commands\RepeatCommand.cs" />
+    <Compile Include="Commands\RightCommand.cs" />
+    <Compile Include="Commands\SetCommand.cs" />
+    <Compile Include="Commands\UpCommand.cs" />
+    <Compile Include="Enums\Direction.cs" />
+    <Compile Include="Interfaces\IIBlockCommand.cs" />
+    <Compile Include="Interfaces\IICommand.cs" />
+    <Compile Include="Interfaces\IIExecuteCommand.cs" />
+    <Compile Include="LangLineCore.cs" />
+    <Compile Include="Models\FieldModel.cs" />
+    <Compile Include="Models\Interpreter.cs" />
+    <Compile Include="Models\InterpreterVariable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include=".gitignore" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LangLine.nuspec" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
- </Project>
+</Project>
