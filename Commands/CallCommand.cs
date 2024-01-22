@@ -1,15 +1,7 @@
-﻿using IspolnitelCherepashka.Enums;
-using IspolnitelCherepashka.Interfaces;
-using IspolnitelCherepashka.Models;
+﻿using IspolnitelCherepashka.Interfaces;
+using LangLine;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using static IspolnitelCherepashka.Commands.ProcedureCommand;
-using LangContext = LangLine.LangLineCore;
-
 
 namespace IspolnitelCherepashka.Commands
 {
@@ -20,9 +12,9 @@ namespace IspolnitelCherepashka.Commands
 
         public ExecuteProcedure Executes;
 
-        public LangContext Context { get; set; }
+        public LangLineCore Context { get; set; }
 
-        public CallCommand(LangContext langLine)
+        public CallCommand(LangLineCore langLine)
         {
             Context = langLine;
         }

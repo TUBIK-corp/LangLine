@@ -1,12 +1,9 @@
 ﻿using IspolnitelCherepashka.Interfaces;
 using IspolnitelCherepashka.Models;
+using LangLine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using LangContext = LangLine.LangLineCore;
 
 namespace IspolnitelCherepashka.Commands
 {
@@ -21,9 +18,9 @@ namespace IspolnitelCherepashka.Commands
         public string Name { get; set; } = "";
         public ExecuteProcedure Execute;
 
-        public LangContext Context { get; set; }
+        public LangLineCore Context { get; set; }
 
-        public ProcedureCommand(LangContext langLine)
+        public ProcedureCommand(LangLineCore langLine)
         {
             Context = langLine;
         }
@@ -51,7 +48,7 @@ namespace IspolnitelCherepashka.Commands
         {
             ConfigureArguments(args);
             Execute = ExecuteBlock;
-            Context.NewVariable(Name, new InterpreterVariable(Execute));
+            Context.CreateNewVariable(Name, new InterpreterVariable(Execute));
         }
 
         public void ExecuteBlock()

@@ -21,14 +21,11 @@ namespace IspolnitelCherepashka.Models
             }
         }
 
-        public Timer timer = null;
 
         public int Width { get; set; }
         public int Height { get; set; }
         public UserModel User { get; set; }
         public List<Point> Positions { get; set; }
-        public int Tick { get; set; }
-        public int Iterator { get; set; }
 
 
         public FieldModel(int width, int height)
@@ -38,76 +35,72 @@ namespace IspolnitelCherepashka.Models
             User = new UserModel(0, 0);
             Positions = new List<Point>();
         }
+
+        public List<Point> GetPositions() => Positions;
         
+        /// <summary>
+        /// Функция фиксации текущего расположения.
+        /// </summary>
         public void FixPosition()
         {
             Positions.Add(new Point(User.XPosition, User.YPosition));
         }
 
+        /// <summary>
+        /// Очищает позиции и возвращает в начало.
+        /// </summary>
         public void ClearPositions()
         {
             User = new UserModel(0, 0);
             Positions.Clear();
         }
 
+        /// <summary>
+        /// Делает шаг в сторону указанного направления.
+        /// </summary>
+        /// <param name="direction">Направление.</param>
+        public void UpdatePosition(Direction direction)
+        {
+            switch (direction)
+            {
+                case Direction.RIGHT:
+                    User.XPosition++;
+                    break;
+                case Direction.LEFT:
+                    User.XPosition--;
+                    break;
+                case Direction.UP:
+                    User.YPosition--;
+                    break;
+                case Direction.DOWN:
+                    User.YPosition++;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Функция запуска пошагового движения в указанном направлении с указанным количеством шагов. 
+        /// </summary>
+        /// <param name="direction">Направление.</param>
+        /// <param name="steps">Количество шагов.</param>
+        /// <exception cref="Exception"></exception>
         public void MoveUser(Direction direction, int steps)
         {
             if(steps < 0)
             {
-                throw new Exception("Negative value detected!!!!!!!!!!!!!!!");
+                throw new Exception("Negative value detected!");
             }
-            switch(direction)
+
+            for (int i = 0; i < steps; i++)
             {
-                case Direction.RIGHT:
-                    for (int i = 0; i < steps; i++)
-                    {
-                        User.XPosition++;
-                        if (IsWall()) { 
-                            ThrowException();
-                            return;
-                        }
-                        FixPosition();
-                    }
-                    
-                    break;
-                case Direction.LEFT:
-                    for (int i = 0; i < steps; i++)
-                    {
-                        User.XPosition--;
-                        if (IsWall())
-                        {
-                            ThrowException();
-                            return;
-                        }
-                        FixPosition();
-                    }
-                    break;
-                case Direction.UP:
-                    for (int i = 0; i < steps; i++)
-                    {
-                        User.YPosition--;
-                        if (IsWall())
-                        {
-                            ThrowException();
-                            return;
-                        }
+                UpdatePosition(direction);
 
-                        FixPosition();
-                    }
-                    break;
-                case Direction.DOWN:
-                    for (int i = 0; i < steps; i++)
-                    {
-                        User.YPosition++;
-                        if (IsWall())
-                        {
-                            ThrowException();
-                            return;
-                        }
-                        FixPosition();
-
-                    }
-                    break;
+                if (IsWall())
+                {
+                    ThrowException();
+                    return;
+                }
+                FixPosition();
             }
         }
 
@@ -117,6 +110,10 @@ namespace IspolnitelCherepashka.Models
         }
        
 
+        /// <summary>
+        /// Проверка на нахождение в стене
+        /// </summary>
+        /// <returns></returns>
         public bool IsWall()
         {
             if (User.XPosition >= Width || User.XPosition < 0 || User.YPosition >= Height || User.YPosition < 0)
@@ -132,7 +129,5 @@ namespace IspolnitelCherepashka.Models
             User.YPosition-1 < 0;
         public bool IsWallDown() =>
             User.YPosition+1 >= Height;
-
-
     }
 }

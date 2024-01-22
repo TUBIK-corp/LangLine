@@ -1,13 +1,9 @@
-﻿using IspolnitelCherepashka.Enums;
-using IspolnitelCherepashka.Interfaces;
+﻿using IspolnitelCherepashka.Interfaces;
 using IspolnitelCherepashka.Models;
+using LangLine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using LangContext = LangLine.LangLineCore;
 
 namespace IspolnitelCherepashka.Commands
 {
@@ -20,9 +16,9 @@ namespace IspolnitelCherepashka.Commands
 
         public int Repeats = 0;
 
-        public LangContext Context { get; set; }
+        public LangLineCore Context { get; set; }
 
-        public RepeatCommand(LangContext langLine)
+        public RepeatCommand(LangLineCore langLine)
         {
             Context = langLine;
         }

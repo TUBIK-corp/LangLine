@@ -2,10 +2,12 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <PackageIcon>D:\VSC projects\LangLine\LangLine\Images\LangLine_Normal.png</PackageIcon>
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B7FA626E-0713-4F6B-B5CE-50B5725EECAD}</ProjectGuid>
     <OutputType>Library</OutputType>
+    <TargetFrameworks>net472;net480;net481</TargetFrameworks>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LangLine</RootNamespace>
     <AssemblyName>LangLine</AssemblyName>
@@ -30,6 +32,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="Images/LangLine_Normal.png" Pack="True" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -67,9 +78,18 @@
     <Compile Include="Models\Interpreter.cs" />
     <Compile Include="Models\InterpreterVariable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
+    <Content Include="Images\LangLine_Large.png" />
+    <AdditionalFiles Include="Images\LangLine_Normal.png" />
+    <Content Include="Images\LangLine_Small.png" />
+    <Content Include="Images\LangLine_Very_Small.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LangLine.nuspec" />

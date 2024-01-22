@@ -1,14 +1,10 @@
 ﻿using IspolnitelCherepashka.Enums;
 using IspolnitelCherepashka.Interfaces;
 using IspolnitelCherepashka.Models;
+using LangLine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using LangContext = LangLine.LangLineCore;
 
 namespace IspolnitelCherepashka.Commands
 {
@@ -21,9 +17,9 @@ namespace IspolnitelCherepashka.Commands
 
         public bool Accessed = false;
 
-        public LangContext Context { get; set; }
+        public LangLineCore Context { get; set; }
 
-        public IfBlockCommand(LangContext langLine)
+        public IfBlockCommand(LangLineCore langLine)
         {
             Context = langLine;
         }

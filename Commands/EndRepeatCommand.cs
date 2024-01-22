@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using LangLine;
 
 namespace IspolnitelCherepashka.Commands
 {
     public class EndRepeatCommand : EndCommand
     {
-        public EndRepeatCommand(LangLine.LangLineCore langLine) : base(langLine) { }
+        public EndRepeatCommand(LangLineCore langLine) : base(langLine) { }
         public override string CommandName { get; } = "ENDREPEAT";
     }
 }

@@ -1,13 +1,7 @@
 ﻿using IspolnitelCherepashka.Interfaces;
 using IspolnitelCherepashka.Models;
+using LangLine;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-
-using LangContext = LangLine.LangLineCore;
 
 namespace IspolnitelCherepashka.Commands
 {
@@ -17,9 +11,9 @@ namespace IspolnitelCherepashka.Commands
         public string Name { get; set; }
         public object Value { get; set; }
 
-        public LangContext Context { get; set; }
+        public LangLineCore Context { get; set; }
 
-        public SetCommand(LangContext langLine)
+        public SetCommand(LangLineCore langLine)
         {
             Context = langLine;
         }
@@ -46,7 +40,7 @@ namespace IspolnitelCherepashka.Commands
             }
             else
             {
-                Context.NewVariable(Name, new InterpreterVariable(Value));
+                Context.CreateNewVariable(Name, new InterpreterVariable(Value));
             }
         }
 

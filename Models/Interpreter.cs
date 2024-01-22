@@ -1,11 +1,11 @@
 ﻿using IspolnitelCherepashka.Commands;
 using IspolnitelCherepashka.Interfaces;
+using LangLine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Documents;
-using static System.Net.Mime.MediaTypeNames;
-using LangContext = LangLine.LangLineCore;
 
 namespace IspolnitelCherepashka.Models
 {
@@ -20,17 +20,39 @@ namespace IspolnitelCherepashka.Models
             Line = line;
         }
     }
+    public class ExceptionEventArgs
+    {
+        public int Index { get; set; }
+        public string ExMessage { get; set; }
+
+        public ExceptionEventArgs(int index, string exMessage)
+        {
+            Index = index;
+            ExMessage = exMessage;
+        }
+    }
+    
+    public class CompletedEventArgs
+    {
+        public List<Point> Positions { get; set; }
+        public CompletedEventArgs(List<Point> positions)
+        {
+            Positions = positions;
+        }
+    }
+
     public class Interpreter
     {
-        public delegate void ExceptionCatch(int index, string exMessage);
-        public event ExceptionCatch ExceptionCatched;
+        public delegate void InterpreterEventHandler<T>(T args);
+        public event InterpreterEventHandler<ExceptionEventArgs> OnException;
+        public event InterpreterEventHandler<CompletedEventArgs> OnCompleted;
 
         public List<InterpreterLine> CommandList { get; private set; }
 
         public Dictionary<string, Type> CommandTypeBinds { get; private set; }
-        public LangContext Context { get; private set; }
+        public LangLineCore Context { get; private set; }
 
-        public Interpreter(LangContext langLine)
+        public Interpreter(LangLineCore langLine)
         {
             Context = langLine;
             CommandList = new List<InterpreterLine>();
@@ -51,11 +73,19 @@ namespace IspolnitelCherepashka.Models
             };
         }
 
+        /// <summary>
+        /// Устанавливает список команд.
+        /// </summary>
+        /// <param name="commandList">Список с командами интерпретатора.</param>
         public void SetCommandList(List<InterpreterLine> commandList)
         {
             CommandList = commandList;
         }
 
+        /// <summary>
+        /// Устанавливает команды списком из текста.
+        /// </summary>
+        /// <param name="stringList">Список текста с построчными командами.</param>
         public void SetCommandList(List<string> stringList)
         {
             CommandList.Clear();
@@ -66,6 +96,11 @@ namespace IspolnitelCherepashka.Models
                 CommandList.Add(new InterpreterLine(i, stringList[i].TrimEnd('\n').TrimEnd('\r').Replace('\\', '/')));
             }
         }
+
+        /// <summary>
+        /// Устанавливает команды списком из FlowDocument.
+        /// </summary>
+        /// <param name="flowDocument">Получить FlowDocument можно из RichTextBox из WPF.</param>
         public void SetCommandList(FlowDocument flowDocument)
         {
             CommandList.Clear();
@@ -74,13 +109,23 @@ namespace IspolnitelCherepashka.Models
                 var paragraph = flowDocument.Blocks.ToList()[i] as Paragraph;
                 var text = new TextRange(paragraph.ContentStart, paragraph.ContentEnd).Text;
                 CommandList.Add(new InterpreterLine(i, text.TrimEnd('\n').TrimEnd('\r').Replace('\\', '/')));
-
             }
         }
 
+        /// <summary>
+        /// Получает часть списка команд с указанного индексв
+        /// </summary>
+        /// <param name="index">Индекс, с которого нужно взять часть списка команд</param>
+        /// <returns>Обрезанный список</returns>
         public List<InterpreterLine> TakeFrom(int index) =>
              CommandList.Where(line => line.Index > index).ToList();
 
+        /// <summary>
+        /// Возвращает тип найденной по названию команде.
+        /// </summary>
+        /// <param name="code">Название команды.</param>
+        /// <returns>Type команды.</returns>
+        /// <exception cref="Exception">Команда не распознана.</exception>
         public Type TypifyCommand(string code)
         {
             var command = code.ToUpper();
@@ -101,12 +146,15 @@ namespace IspolnitelCherepashka.Models
         {
             var line = iline.Line;
             int skipCount = 0;
+
             if (string.IsNullOrWhiteSpace(line))
                 return 0;
+
             line = line.TrimStart(' ');
             var parts = line.Split(' ');
             var command_name = parts[0];
             var arguments_line = "";
+
             if (parts.Length > 0)
             {
                 arguments_line = string.Join(" ", parts.Skip(1));
@@ -123,13 +171,24 @@ namespace IspolnitelCherepashka.Models
             return skipCount;
         }
 
+        /// <summary>
+        /// Вызывает привязанные делегаты к OnException
+        /// </summary>
+        /// <param name="index">Номер строки</param>
+        /// <param name="ex">Сообщение ошибки</param>
         public void ProcessException(int index, Exception ex)
         {
-            ExceptionCatched?.Invoke(index-1, ex.Message);
+            OnException?.Invoke(new ExceptionEventArgs(index-1, ex.Message));
         }
 
+        /// <summary>
+        /// Запуск программы с загруженными командами
+        /// </summary>
+        /// <exception cref="Exception">Командный список пуст</exception>
         public void StartProgram()
         {
+            bool isSuccess = true;
+
             if (CommandList == null)
             {
                 throw new Exception("CommandList is empty");
@@ -144,10 +203,14 @@ namespace IspolnitelCherepashka.Models
                 }
                 catch (Exception ex)
                 {
+                    isSuccess = false;
                     ProcessException(CommandList[i].Index+1, ex);
                     break;
                 }
             }
+
+            if (isSuccess)
+                OnCompleted?.Invoke(new CompletedEventArgs(Context.MainField.GetPositions()));
         }
     }
 }

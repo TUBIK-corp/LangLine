@@ -1,11 +1,6 @@
 ﻿using IspolnitelCherepashka.Interfaces;
-using IspolnitelCherepashka.Models;
+using LangLine;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LangContext = LangLine.LangLineCore;
 
 namespace IspolnitelCherepashka.Commands
 {
@@ -16,9 +11,9 @@ namespace IspolnitelCherepashka.Commands
 
         public virtual void Execute() { }
 
-        public LangContext Context { get; set; }
+        public LangLineCore Context { get; set; }
 
-        public MoveCommand(LangContext langLine)
+        public MoveCommand(LangLineCore langLine)
         {
             Context = langLine;
         }
