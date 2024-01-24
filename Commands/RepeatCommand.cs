@@ -66,7 +66,7 @@ namespace IspolnitelCherepashka.Commands
                 }
                 catch
                 {
-                    var log = new ExceptionLog(Context.GetCurrentIndex(), new Exception($"Внутри {CommandName} произошла ошибка (в строке {_index})"));
+                    var log = new ExceptionLog(_index, new Exception($"Внутри {CommandName} произошла ошибка (в строке {_index})"));
                     Context.LogException(log);
                 }
             }

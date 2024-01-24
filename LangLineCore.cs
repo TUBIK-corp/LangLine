@@ -32,13 +32,18 @@ namespace LangLine
         public int MaxNesting { get; private set; } = 1000;
 
         /// <summary>
+        /// Максимально возможное значение переменной (По умолчанию 10000000).
+        /// </summary>
+        public int MaxValueOfVariables { get; private set; } = 10000000;
+
+        /// <summary>
         /// Основной модуль запуска програмного кода на языке LangLine.
         /// </summary>
         public LangLineCore()
         {
             InterpreterVariables = new Dictionary<string, InterpreterVariable>();
             InterpreterModule = new Interpreter(this);
-            MainField = new FieldModel(21, 21);
+            MainField = new FieldModel(this, 21, 21);
         }
 
         /// <summary>
@@ -50,7 +55,7 @@ namespace LangLine
         {
             InterpreterVariables = new Dictionary<string, InterpreterVariable>();
             InterpreterModule = new Interpreter(this);
-            MainField = new FieldModel(width, height);
+            MainField = new FieldModel(this, width, height);
         }
 
         /// <summary>
@@ -70,28 +75,47 @@ namespace LangLine
                 }                                                                            
             }                                                                                
         }                                                                                    
-                                                                                             
+                                    
+        /// <summary>
+        /// Получить индекс команды, на которой сейчас находится программа.
+        /// </summary>
+        /// <returns>Индекс.</returns>
         public int GetCurrentIndex()
         {
             return InterpreterModule.GetCurrentIndex();
         }                                                                           
-                                                                                             
+                                      
+        /// <summary>
+        /// StackTrace для логирования ошибок. 
+        /// </summary>
         public List<ExceptionLog> StackTrace { get; private set; }                           
-                                                                                             
+                             
+        /// <summary>
+        /// Логирование возникающих ошибок в StackTrace, навигация через throw.
+        /// </summary>
+        /// <param name="exceptionLog">Лог ошибки.</param>
         public void LogException(ExceptionLog exceptionLog)                                  
         {                                                                                    
             StackTrace.Append(exceptionLog);
             throw exceptionLog.Exception;
         }                                                                                    
-                                                                                             
+                                      
+        /// <summary>
+        /// Ограничить максимальную вложенность.
+        /// </summary>
+        /// <param name="maxNesting">Число.</param>
         public void LimitNesting(int maxNesting)                                             
         {                                                                                    
             MaxNesting = maxNesting;
         }
 
+        /// <summary>
+        /// Ограничить максимальное значение переменных.
+        /// </summary>
+        /// <param name="maxVariable">Число.</param>
         public void LimitVariable(int maxVariable)
         {
-
+            MaxValueOfVariables = maxVariable;
         }
 
         /// <summary>

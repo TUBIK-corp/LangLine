@@ -34,12 +34,17 @@ namespace IspolnitelCherepashka.Commands
             }
             catch
             {
-                var log = new ExceptionLog(Context.GetCurrentIndex(), new InvalidArgumentsException());
+                var log = new ExceptionLog(_index, new InvalidArgumentsException());
                 Context.LogException(log);
             }
             if (int.TryParse(Name[0].ToString(), out int res))
             {
                 var log = new ExceptionLog(_index, new InvalidNameOfVariableException(), $"Переменная \"{Name}\" не может начинаться с цифры \"{res}\"");
+                Context.LogException(log);
+            }
+            if((int)Value > Context.MaxValueOfVariables)
+            {
+                var log = new ExceptionLog(_index, new OutOfMaxVariablesValueException(Context.MaxValueOfVariables), $"Переменная \"{Name}\" слишком большая.");
                 Context.LogException(log);
             }
         }

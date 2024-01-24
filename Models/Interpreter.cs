@@ -42,11 +42,23 @@ namespace IspolnitelCherepashka.Models
         }
     }
 
+    public class CustomEventArgs
+    {
+        public string Name { get; set; }
+        public object Value { get; set; }
+        public CustomEventArgs(string argName, object value = null)
+        {
+            Name = argName;
+            Value = value;
+        }
+    }
+
     public class Interpreter
     {
         public delegate void InterpreterEventHandler<T>(T args);
         public event InterpreterEventHandler<ExceptionEventArgs> OnException;
         public event InterpreterEventHandler<CompletedEventArgs> OnCompleted;
+        public event InterpreterEventHandler<CustomEventArgs> OnCustomEvent;
 
         public bool IsExceptionsHandling()
         {
@@ -79,6 +91,29 @@ namespace IspolnitelCherepashka.Models
             };
         }
 
+        /// <summary>
+        /// Вызвать собственный event.
+        /// </summary>
+        /// <param name="name">Навзание.</param>
+        public void InvokeCustomEvent(string name)
+        {
+            OnCustomEvent?.Invoke(new CustomEventArgs(name));
+        }
+        /// <summary>
+        /// Вызвать собственный event.
+        /// </summary>
+        /// <param name="name">навзание.</param>
+        /// <param name="value">Передаваемый параметр.</param>
+        public void InvokeCustomEvent(string name, object value)
+        {
+            OnCustomEvent?.Invoke(new CustomEventArgs(name, value));
+        }
+
+        /// <summary>
+        /// Добавляет команду в словарь команд.
+        /// </summary>
+        /// <param name="name">Название, по которому будет вызываться команда.</param>
+        /// <param name="type">Тип, который будет реализовываться при вызове команды.</param>
         public void AddCommand(string name, Type type)
         {
             CommandTypeBinds.Add(name, type);

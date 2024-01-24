@@ -38,19 +38,19 @@ namespace IspolnitelCherepashka.Commands
             object name = null;
             if (str_arguments.Split(' ').Length > 0)
             {
-                var log = new ExceptionLog(Context.GetCurrentIndex(), new InvalidArgumentsException());
+                var log = new ExceptionLog(_index, new InvalidArgumentsException());
                 Context.LogException(log);
             }
             name = Context.InterpreteArgument(str_arguments);
 
             if (!name.Equals(str_arguments))
             {
-                var log = new ExceptionLog(Context.GetCurrentIndex(), new InvalidArgumentsException("Невозможно назвать процедуру как переменную."));
+                var log = new ExceptionLog(_index, new InvalidArgumentsException("Невозможно назвать процедуру как переменную."));
                 Context.LogException(log);
             }
             if (name is ExecuteProcedure)
             {
-                var log = new ExceptionLog(Context.GetCurrentIndex(), new ProcedureExistsException());
+                var log = new ExceptionLog(_index, new ProcedureExistsException());
                 Context.LogException(log);
             }
             Name = (string)name;

@@ -1,7 +1,12 @@
 ﻿using IspolnitelCherepashka.Enums;
+using LangLine;
+using LangLine.Exceptions;
+using LangLine.Models;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Windows;
+using System.Xml.Linq;
 using Timer = System.Timers.Timer;
 
 namespace IspolnitelCherepashka.Models
@@ -27,13 +32,15 @@ namespace IspolnitelCherepashka.Models
         public UserModel User { get; set; }
         public List<Point> Positions { get; set; }
 
+        public LangLineCore Context;
 
-        public FieldModel(int width, int height)
+        public FieldModel(LangLineCore context, int width, int height)
         {
             Width = width;
             Height = height;
             User = new UserModel(0, 0);
             Positions = new List<Point>();
+            Context = context;
         }
 
         public List<Point> GetPositions() => Positions;
@@ -86,6 +93,12 @@ namespace IspolnitelCherepashka.Models
         /// <exception cref="Exception"></exception>
         public void MoveUser(Direction direction, int steps)
         {
+            if(steps > Context.MaxValueOfVariables)
+            {
+                var log = new ExceptionLog(Context.GetCurrentIndex(), new OutOfMaxVariablesValueException(Context.MaxValueOfVariables));
+                Context.LogException(log);
+            }
+
             for (int i = 0; i < steps; i++)
             {
                 UpdatePosition(direction);

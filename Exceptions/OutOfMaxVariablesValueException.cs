@@ -4,6 +4,6 @@ namespace LangLine.Exceptions
 {
     public class OutOfMaxVariablesValueException : Exception
     {
-        public OutOfMaxVariablesValueException(string message) : base(message) { }
+        public OutOfMaxVariablesValueException(int value) : base($"Аргумент превысил максимальное возможное значение: {value}") { }
     }
 }

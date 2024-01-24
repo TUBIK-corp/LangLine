@@ -1,6 +1,9 @@
 ﻿using IspolnitelCherepashka.Interfaces;
 using LangLine;
+using LangLine.Exceptions;
+using LangLine.Models;
 using System;
+using System.Xml.Linq;
 using static IspolnitelCherepashka.Commands.ProcedureCommand;
 
 namespace IspolnitelCherepashka.Commands
@@ -14,13 +17,16 @@ namespace IspolnitelCherepashka.Commands
 
         public LangLineCore Context { get; set; }
 
-        public CallCommand(LangLineCore langLine)
+        private int _index = -1;
+        public CallCommand(LangLineCore langLine, int index)
         {
             Context = langLine;
+            _index = index;
         }
 
         public void ConfigureArguments(string str_arguments)
         {
+            bool notFound = false;
             try
             {
                 if (Context.ContainsVariable(str_arguments))
@@ -29,18 +35,32 @@ namespace IspolnitelCherepashka.Commands
                 }
                 else
                 {
-                    throw new Exception($"There is no procedure with name {str_arguments}");
+                    notFound = true;
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                throw new ArgumentException($"Failed to process unknown argument: {ex.Message}");
+                var log = new ExceptionLog(_index, new InvalidArgumentsException());
+                Context.LogException(log);
             }
+            if(notFound)
+            {
+                var log = new ExceptionLog(_index, new NoProcedureFoundException());
+                Context.LogException(log);
+            }
+
         }
 
         public void Execute()
         {
-            Executes();
+            try
+            {
+                Executes();
+            } catch
+            {
+                var log = new ExceptionLog(_index, new Exception($"Внутри {CommandName} произошла ошибка (в строке {_index})"));
+                Context.LogException(log);
+            }
         }
 
         public void StartCommand(string args)
