@@ -5,7 +5,7 @@ namespace IspolnitelCherepashka.Commands
 {
     public class RightCommand : MoveCommand
     {
-        public RightCommand(LangLineCore langLine) : base(langLine) { }
+        public RightCommand(LangLineCore langLine, int index) : base(langLine, index) { }
 
         public override string CommandName { get; } = "RIGHT";
 

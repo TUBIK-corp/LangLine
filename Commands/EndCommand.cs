@@ -1,5 +1,7 @@
 ﻿using IspolnitelCherepashka.Interfaces;
 using LangLine;
+using LangLine.Exceptions;
+using LangLine.Models;
 using System;
 
 namespace IspolnitelCherepashka.Commands
@@ -10,14 +12,17 @@ namespace IspolnitelCherepashka.Commands
 
         public LangLineCore Context { get; set; }
 
-        public EndCommand(LangLineCore langLine)
+        private int _index = -1;
+        public EndCommand(LangLineCore langLine, int index)
         {
             Context = langLine;
+            _index = index;
         }
 
         public void StartCommand(string args)
         {
-            throw new Exception($"Extra closing command {CommandName} is not expected");
+            var log = new ExceptionLog(_index, new UnknownEndException());
+            Context.LogException(log);
         }
     }
 }

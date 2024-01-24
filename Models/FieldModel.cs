@@ -86,11 +86,6 @@ namespace IspolnitelCherepashka.Models
         /// <exception cref="Exception"></exception>
         public void MoveUser(Direction direction, int steps)
         {
-            if(steps < 0)
-            {
-                throw new Exception("Negative value detected!");
-            }
-
             for (int i = 0; i < steps; i++)
             {
                 UpdatePosition(direction);

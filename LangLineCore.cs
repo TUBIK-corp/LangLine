@@ -1,4 +1,6 @@
-﻿using IspolnitelCherepashka.Models;
+﻿using IspolnitelCherepashka.Interfaces;
+using IspolnitelCherepashka.Models;
+using LangLine.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +8,7 @@ using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
+using System.Windows.Input;
 
 namespace LangLine
 {
@@ -23,6 +26,10 @@ namespace LangLine
         /// Физическое поле для передвижения.
         /// </summary>
         public FieldModel MainField { get; private set; }
+        /// <summary>
+        /// Максимально возможная вложенность (По умолчанию 1000).
+        /// </summary>
+        public int MaxNesting { get; private set; } = 1000;
 
         /// <summary>
         /// Основной модуль запуска програмного кода на языке LangLine.
@@ -48,12 +55,53 @@ namespace LangLine
 
         /// <summary>
         /// Запуск программы с заданным програмным кодом. В случае отсутсвия програмного кода, вызывается Exception. Обработать Exception можно используя event - OnException
-        /// </summary>
-        public void StartProgram()
+        /// </summary>                                                                       
+        public void StartProgram()                                                           
+        {                                                                                    
+            StackTrace.Clear();                                                              
+            MainField.ClearPositions();                                                      
+            ClearVariables();                                                                
+            var success = InterpreterModule.StartProgram();                                  
+            if(!success)                                                                     
+            {                                                                                
+                if(!InterpreterModule.IsExceptionsHandling())                                
+                {                                                                            
+                    throw StackTrace.Last().Exception;                                       
+                }                                                                            
+            }                                                                                
+        }                                                                                    
+                                                                                             
+        public int GetCurrentIndex()
         {
-            MainField.ClearPositions();
-            ClearVariables();
-            InterpreterModule.StartProgram();
+            return InterpreterModule.GetCurrentIndex();
+        }                                                                           
+                                                                                             
+        public List<ExceptionLog> StackTrace { get; private set; }                           
+                                                                                             
+        public void LogException(ExceptionLog exceptionLog)                                  
+        {                                                                                    
+            StackTrace.Append(exceptionLog);
+            throw exceptionLog.Exception;
+        }                                                                                    
+                                                                                             
+        public void LimitNesting(int maxNesting)                                             
+        {                                                                                    
+            MaxNesting = maxNesting;
+        }
+
+        public void LimitVariable(int maxVariable)
+        {
+
+        }
+
+        /// <summary>
+        /// Зарегистрировать собственную команду.
+        /// </summary>
+        /// <param name="name">Название команды для кода.</param>
+        /// <param name="type">Тип команды для инициализации.</param>
+        public void RegisterCommand(string name, Type type)
+        {
+            InterpreterModule.AddCommand(name, type);
         }
 
         /// <summary>

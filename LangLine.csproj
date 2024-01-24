@@ -55,6 +55,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\Helpers\BlockCommand.cs" />
     <Compile Include="Commands\CallCommand.cs" />
     <Compile Include="Commands\DownCommand.cs" />
     <Compile Include="Commands\EndCommand.cs" />
@@ -70,10 +71,23 @@
     <Compile Include="Commands\SetCommand.cs" />
     <Compile Include="Commands\UpCommand.cs" />
     <Compile Include="Enums\Direction.cs" />
+    <Compile Include="Exceptions\CommandIsNotDefinedException.cs" />
+    <Compile Include="Exceptions\InfinityValueException.cs" />
+    <Compile Include="Exceptions\InvalidArgumentsException.cs" />
+    <Compile Include="Exceptions\InvalidNameOfVariableException.cs" />
+    <Compile Include="Exceptions\NegativeValueException.cs" />
+    <Compile Include="Exceptions\NoEndCommandException.cs" />
+    <Compile Include="Exceptions\NotStatedVariableException.cs" />
+    <Compile Include="Exceptions\OutOfMaxNestingException.cs" />
+    <Compile Include="Exceptions\OutOfMaxVariablesValueException.cs" />
+    <Compile Include="Exceptions\ProcedureExistsException.cs" />
+    <Compile Include="Exceptions\UnknownEndException.cs" />
+    <Compile Include="Exceptions\WallException.cs" />
     <Compile Include="Interfaces\IIBlockCommand.cs" />
     <Compile Include="Interfaces\IICommand.cs" />
     <Compile Include="Interfaces\IIExecuteCommand.cs" />
     <Compile Include="LangLineCore.cs" />
+    <Compile Include="Models\ExceptionLog.cs" />
     <Compile Include="Models\FieldModel.cs" />
     <Compile Include="Models\Interpreter.cs" />
     <Compile Include="Models\InterpreterVariable.cs" />

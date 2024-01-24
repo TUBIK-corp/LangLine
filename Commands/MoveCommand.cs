@@ -1,5 +1,7 @@
 ﻿using IspolnitelCherepashka.Interfaces;
 using LangLine;
+using LangLine.Exceptions;
+using LangLine.Models;
 using System;
 
 namespace IspolnitelCherepashka.Commands
@@ -13,9 +15,12 @@ namespace IspolnitelCherepashka.Commands
 
         public LangLineCore Context { get; set; }
 
-        public MoveCommand(LangLineCore langLine)
+        private int _index = -1;
+
+        public MoveCommand(LangLineCore langLine, int index)
         {
             Context = langLine;
+            _index = index;
         }
 
         public void ConfigureArguments(string str_arguments)
@@ -25,10 +30,17 @@ namespace IspolnitelCherepashka.Commands
                 var arg = Context.InterpreteArgument(str_arguments);
                 MoveSteps = Convert.ToInt32(arg);
             }
-            catch (Exception ex)
+            catch 
             {
-                throw new ArgumentException($"Failed to process unknown argument: {ex.Message}");
+                var log = new ExceptionLog(_index, new InvalidArgumentsException());
+                Context.LogException(log);
             }
+            if (MoveSteps < 0)
+            {
+                var log = new ExceptionLog(_index, new NegativeValueException());
+                Context.LogException(log);
+            }
+
         }
 
         public void StartCommand(string args)

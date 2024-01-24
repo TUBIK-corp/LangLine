@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IspolnitelCherepashka.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,9 @@ namespace IspolnitelCherepashka.Interfaces
 {
     public interface IIBlockCommand : IICommand
     {
+
+        List<InterpreterLine> Block { get; set; }
+        string BlockEndName { get; }
         void ConfigureArguments(string str_arguments);
         int InitializeBlock(int index);
         void ExecuteBlock();

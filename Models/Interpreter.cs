@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Input;
 
 namespace IspolnitelCherepashka.Models
 {
@@ -47,6 +48,11 @@ namespace IspolnitelCherepashka.Models
         public event InterpreterEventHandler<ExceptionEventArgs> OnException;
         public event InterpreterEventHandler<CompletedEventArgs> OnCompleted;
 
+        public bool IsExceptionsHandling()
+        {
+            return OnException.GetInvocationList().Length != 0;
+        }
+
         public List<InterpreterLine> CommandList { get; private set; }
 
         public Dictionary<string, Type> CommandTypeBinds { get; private set; }
@@ -73,6 +79,11 @@ namespace IspolnitelCherepashka.Models
             };
         }
 
+        public void AddCommand(string name, Type type)
+        {
+            CommandTypeBinds.Add(name, type);
+            Console.WriteLine($"Команда {name} добавлена.");
+        }
         /// <summary>
         /// Устанавливает список команд.
         /// </summary>
@@ -137,6 +148,15 @@ namespace IspolnitelCherepashka.Models
             return CommandTypeBinds[command];
         }
 
+
+        private int _currentIndex = -1;
+        public int GetCurrentIndex() => _currentIndex;
+
+        public InterpreterLine GetCommandLineByIndex(int index)
+        {
+            return CommandList.First(line => line.Index == index);
+        }
+
         /// <summary>
         /// Запускает код и возвращает количество строчек, которые надо пропустить
         /// </summary>
@@ -144,6 +164,7 @@ namespace IspolnitelCherepashka.Models
         /// <returns></returns>
         public int StartLine(InterpreterLine iline)
         {
+            _currentIndex = iline.Index;
             var line = iline.Line;
             int skipCount = 0;
 
@@ -161,7 +182,7 @@ namespace IspolnitelCherepashka.Models
             }
 
             var command_type = TypifyCommand(command_name);
-            var command = (IICommand)Activator.CreateInstance(command_type, args: Context);
+            var command = (IICommand)Activator.CreateInstance(command_type, args: new { Context, iline.Index });
 
             if (command is IIBlockCommand)
                 skipCount = ((IIBlockCommand)command).InitializeBlock(iline.Index);
@@ -181,12 +202,23 @@ namespace IspolnitelCherepashka.Models
             OnException?.Invoke(new ExceptionEventArgs(index-1, ex.Message));
         }
 
+        public int CurrentNest { get; private set; }
+
+        public void AddToCurrentNest(int value)
+        {
+            if(CurrentNest+1 > Context.MaxNesting)
+            {
+
+            }
+            CurrentNest+=value;
+        }
         /// <summary>
         /// Запуск программы с загруженными командами
         /// </summary>
         /// <exception cref="Exception">Командный список пуст</exception>
-        public void StartProgram()
+        public bool StartProgram()
         {
+            CurrentNest = 0;
             bool isSuccess = true;
 
             if (CommandList == null)
@@ -211,6 +243,8 @@ namespace IspolnitelCherepashka.Models
 
             if (isSuccess)
                 OnCompleted?.Invoke(new CompletedEventArgs(Context.MainField.GetPositions()));
+            
+            return isSuccess;
         }
     }
 }

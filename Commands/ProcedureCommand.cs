@@ -1,9 +1,13 @@
 ﻿using IspolnitelCherepashka.Interfaces;
 using IspolnitelCherepashka.Models;
 using LangLine;
+using LangLine.Commands.Helpers;
+using LangLine.Exceptions;
+using LangLine.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace IspolnitelCherepashka.Commands
 {
@@ -13,35 +17,43 @@ namespace IspolnitelCherepashka.Commands
         public string CommandName { get; } = "PROCEDURE";
         public string BlockEndName { get; } = "ENDPROC";
 
-        public List<InterpreterLine> Block = new List<InterpreterLine>();
+        public List<InterpreterLine> Block { get; set; } = new List<InterpreterLine>();
 
         public string Name { get; set; } = "";
         public ExecuteProcedure Execute;
 
         public LangLineCore Context { get; set; }
 
-        public ProcedureCommand(LangLineCore langLine)
+
+        private int _index = -1;
+
+        public ProcedureCommand(LangLineCore langLine, int index)
         {
             Context = langLine;
+            _index = index;
         }
 
         public void ConfigureArguments(string str_arguments)
         {
-            try
+            object name = null;
+            if (str_arguments.Split(' ').Length > 0)
             {
-                var name = Context.InterpreteArgument(str_arguments);
-                if(!name.Equals(str_arguments))
-                {
-                    if (name is ExecuteProcedure)
-                        throw new ArgumentException($"Procedure {str_arguments} is already exist");
-                    throw new ArgumentException("Variable for procedure is not expected");
-                }
-                Name = (string)name;
+                var log = new ExceptionLog(Context.GetCurrentIndex(), new InvalidArgumentsException());
+                Context.LogException(log);
             }
-            catch(Exception ex)
+            name = Context.InterpreteArgument(str_arguments);
+
+            if (!name.Equals(str_arguments))
             {
-                throw new ArgumentException($"Failed to process unknown argument: {ex.Message}");
+                var log = new ExceptionLog(Context.GetCurrentIndex(), new InvalidArgumentsException("Невозможно назвать процедуру как переменную."));
+                Context.LogException(log);
             }
+            if (name is ExecuteProcedure)
+            {
+                var log = new ExceptionLog(Context.GetCurrentIndex(), new ProcedureExistsException());
+                Context.LogException(log);
+            }
+            Name = (string)name;
         }
 
         public void StartCommand(string args)
@@ -60,49 +72,52 @@ namespace IspolnitelCherepashka.Commands
                     var skip = Context.InterpreterModule.StartLine(Block[i]);
                     i += skip;
                 }
-                catch (Exception ex)
+                catch
                 {
-                    throw new Exception($"\"Procedure\" block line {Block[i].Index+1}: " + ex.Message);
+                    var log = new ExceptionLog(_index, new Exception($"Внутри процедуры {Name} произошла ошибка (в строке {_index})"));
+                    Context.LogException(log);
                 }
             }
         }
 
         public int InitializeBlock(int index)
         {
-            Block = Context.InterpreterModule.TakeFrom(index);
-            int skipEndsCount = 0;
+            return this.InitBlock(index);
 
-            if (Block.Count == 0)
-                throw new Exception($"No {BlockEndName}");
-            for (int i = 0; i < Block.Count; i++)
-            {
-                var line = Block[i];
-                if (line.Line.ToLower().StartsWith(CommandName.ToLower()))
-                    skipEndsCount++;
-                else if (i == Block.Count - 1 &&
-                    !line.Line.ToLower().Equals(BlockEndName.ToLower()))
-                {
-                    throw new Exception($"No {BlockEndName}");
-                }
-                else if (line.Line.ToLower().Equals(BlockEndName.ToLower()))
-                {
-                    if (skipEndsCount > 0)
-                    {
-                        skipEndsCount--;
-                    }
-                    else
-                    {
-                        Block = Block.Take(i).ToList();
-                        break;
-                    }
-                }
-            }
-            if (skipEndsCount > 0)
-            {
-                //there is no closed
-                //throw exception
-            }
-            return Block.Count + 1;
+            //Block = Context.InterpreterModule.TakeFrom(index);
+            //int skipEndsCount = 0;
+            //
+            //if (Block.Count == 0)
+            //    throw new Exception($"No {BlockEndName}");
+            //for (int i = 0; i < Block.Count; i++)
+            //{
+            //    var line = Block[i];
+            //    if (line.Line.ToLower().StartsWith(CommandName.ToLower()))
+            //        skipEndsCount++;
+            //    else if (i == Block.Count - 1 &&
+            //        !line.Line.ToLower().Equals(BlockEndName.ToLower()))
+            //    {
+            //        throw new Exception($"No {BlockEndName}");
+            //    }
+            //    else if (line.Line.ToLower().Equals(BlockEndName.ToLower()))
+            //    {
+            //        if (skipEndsCount > 0)
+            //        {
+            //            skipEndsCount--;
+            //        }
+            //        else
+            //        {
+            //            Block = Block.Take(i).ToList();
+            //            break;
+            //        }
+            //    }
+            //}
+            //if (skipEndsCount > 0)
+            //{
+            //    //there is no closed
+            //    //throw exception
+            //}
+            //return Block.Count + 1;
         }
     }
 }
