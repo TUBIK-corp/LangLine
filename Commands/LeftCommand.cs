@@ -1,7 +1,7 @@
-﻿using IspolnitelCherepashka.Enums;
+﻿using LangLine.Enums;
 using LangLine;
 
-namespace IspolnitelCherepashka.Commands
+namespace LangLine.Commands
 {
     public class LeftCommand : MoveCommand
     {

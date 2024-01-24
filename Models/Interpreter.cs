@@ -1,5 +1,5 @@
-﻿using IspolnitelCherepashka.Commands;
-using IspolnitelCherepashka.Interfaces;
+﻿using LangLine.Commands;
+using LangLine.Interfaces;
 using LangLine;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 
-namespace IspolnitelCherepashka.Models
+namespace LangLine.Models
 {
     public class InterpreterLine
     {

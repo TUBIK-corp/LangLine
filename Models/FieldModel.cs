@@ -1,4 +1,4 @@
-﻿using IspolnitelCherepashka.Enums;
+﻿using LangLine.Enums;
 using LangLine;
 using LangLine.Exceptions;
 using LangLine.Models;
@@ -9,7 +9,7 @@ using System.Windows;
 using System.Xml.Linq;
 using Timer = System.Timers.Timer;
 
-namespace IspolnitelCherepashka.Models
+namespace LangLine.Models
 {
     public class FieldModel
     { 

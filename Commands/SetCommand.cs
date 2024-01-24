@@ -1,12 +1,12 @@
-﻿using IspolnitelCherepashka.Interfaces;
-using IspolnitelCherepashka.Models;
+﻿using LangLine.Interfaces;
+using LangLine.Models;
 using LangLine;
 using LangLine.Exceptions;
 using LangLine.Models;
 using System;
 using System.Reflection;
 
-namespace IspolnitelCherepashka.Commands
+namespace LangLine.Commands
 {
     public class SetCommand : IIExecuteCommand
     {

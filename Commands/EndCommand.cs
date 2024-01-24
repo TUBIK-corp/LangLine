@@ -1,10 +1,10 @@
-﻿using IspolnitelCherepashka.Interfaces;
+﻿using LangLine.Interfaces;
 using LangLine;
 using LangLine.Exceptions;
 using LangLine.Models;
 using System;
 
-namespace IspolnitelCherepashka.Commands
+namespace LangLine.Commands
 {
     public class EndCommand : IICommand
     {

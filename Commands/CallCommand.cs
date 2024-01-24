@@ -1,12 +1,12 @@
-﻿using IspolnitelCherepashka.Interfaces;
+﻿using LangLine.Interfaces;
 using LangLine;
 using LangLine.Exceptions;
 using LangLine.Models;
 using System;
 using System.Xml.Linq;
-using static IspolnitelCherepashka.Commands.ProcedureCommand;
+using static LangLine.Commands.ProcedureCommand;
 
-namespace IspolnitelCherepashka.Commands
+namespace LangLine.Commands
 {
     public class CallCommand : IIExecuteCommand
     {

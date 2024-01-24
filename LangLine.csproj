@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <PackageIcon>D:\VSC projects\LangLine\LangLine\Images\LangLine_Normal.png</PackageIcon>
+    <PackageIcon>D:\VSC projects\LangLineGithub\LangLine\Images\LangLine_Normal.png</PackageIcon>
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B7FA626E-0713-4F6B-B5CE-50B5725EECAD}</ProjectGuid>

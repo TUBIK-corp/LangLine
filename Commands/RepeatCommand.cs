@@ -1,5 +1,5 @@
-﻿using IspolnitelCherepashka.Interfaces;
-using IspolnitelCherepashka.Models;
+﻿using LangLine.Interfaces;
+using LangLine.Models;
 using LangLine;
 using LangLine.Commands.Helpers;
 using LangLine.Exceptions;
@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace IspolnitelCherepashka.Commands
+namespace LangLine.Commands
 {
     public class RepeatCommand : IIBlockCommand
     {

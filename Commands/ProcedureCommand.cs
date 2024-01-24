@@ -1,5 +1,5 @@
-﻿using IspolnitelCherepashka.Interfaces;
-using IspolnitelCherepashka.Models;
+﻿using LangLine.Interfaces;
+using LangLine.Models;
 using LangLine;
 using LangLine.Commands.Helpers;
 using LangLine.Exceptions;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace IspolnitelCherepashka.Commands
+namespace LangLine.Commands
 {
     public class ProcedureCommand : IIBlockCommand
     {

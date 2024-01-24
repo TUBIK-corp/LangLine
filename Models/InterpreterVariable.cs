@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IspolnitelCherepashka.Models
+namespace LangLine.Models
 {
     public class InterpreterVariable
     {

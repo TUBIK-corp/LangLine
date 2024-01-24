@@ -1,11 +1,11 @@
-﻿using IspolnitelCherepashka.Models;
+﻿using LangLine.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IspolnitelCherepashka.Interfaces
+namespace LangLine.Interfaces
 {
     public interface IIBlockCommand : IICommand
     {

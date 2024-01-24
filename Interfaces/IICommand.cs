@@ -1,7 +1,7 @@
 ﻿
 using LangContext = LangLine.LangLineCore;
 
-namespace IspolnitelCherepashka.Interfaces
+namespace LangLine.Interfaces
 {
     public interface IICommand
     {

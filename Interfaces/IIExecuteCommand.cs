@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IspolnitelCherepashka.Interfaces
+namespace LangLine.Interfaces
 {
     public interface IIExecuteCommand : IICommand
     {

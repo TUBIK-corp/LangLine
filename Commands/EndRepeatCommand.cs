@@ -1,6 +1,6 @@
 ﻿using LangLine;
 
-namespace IspolnitelCherepashka.Commands
+namespace LangLine.Commands
 {
     public class EndRepeatCommand : EndCommand
     {
