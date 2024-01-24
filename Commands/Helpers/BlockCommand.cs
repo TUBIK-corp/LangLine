@@ -1,4 +1,5 @@
-﻿using LangLine.Interfaces;
+﻿using LangLine.Exceptions;
+using LangLine.Interfaces;
 using LangLine.Models;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,10 @@ namespace LangLine.Commands.Helpers
             int skipEndsCount = 0;
 
             if (Command.Block.Count == 0)
-                throw new Exception($"No {Command.BlockEndName}");
+            {
+                var log = new ExceptionLog(Command.Context.GetCurrentIndex(), new NoEndCommandException(Command.BlockEndName));
+                Command.Context.LogException(log);
+            }
             for (int i = 0; i < Command.Block.Count; i++)
             {
                 var line = Command.Block[i];
@@ -26,7 +30,8 @@ namespace LangLine.Commands.Helpers
                 else if (i == Command.Block.Count - 1 &&
                     !line.Line.ToLower().Equals(Command.BlockEndName.ToLower()))
                 {
-                    throw new Exception($"No {Command.BlockEndName}");
+                    var log = new ExceptionLog(Command.Context.GetCurrentIndex(), new NoEndCommandException(Command.BlockEndName));
+                    Command.Context.LogException(log);
                 }
                 else if (line.Line.ToLower().Equals(Command.BlockEndName.ToLower()))
                 {
@@ -40,6 +45,11 @@ namespace LangLine.Commands.Helpers
                         break;
                     }
                 }
+            }
+            if(skipEndsCount>0)
+            {
+                var log = new ExceptionLog(Command.Context.GetCurrentIndex(), new NoEndCommandException(Command.BlockEndName));
+                Command.Context.LogException(log);
             }
             return Command.Block.Count + 1;
         }

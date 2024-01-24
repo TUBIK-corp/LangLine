@@ -14,14 +14,14 @@ namespace LangLine.Models
 
         public ExceptionLog(int line, Exception exception)
         {
-            Line = line;
+            Line = line+1;
             Exception = exception;
             ExceptionMessage = exception.Message;
         }
 
         public ExceptionLog(int line, Exception exception, string exceptionMessage)
         {
-            Line = line;
+            Line = line+1;
             ExceptionMessage = exceptionMessage;
             Exception = exception;
         }

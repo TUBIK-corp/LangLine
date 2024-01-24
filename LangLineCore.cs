@@ -98,9 +98,7 @@ namespace LangLine
         /// <param name="exceptionLog">Лог ошибки.</param>
         public void LogException(ExceptionLog exceptionLog)                                  
         {
-            Console.WriteLine(exceptionLog.Line);
             StackTrace.Add(exceptionLog);
-            Console.WriteLine(StackTrace.Count);
             throw exceptionLog.Exception;
         }                                                                                    
                                       

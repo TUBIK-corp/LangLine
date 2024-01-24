@@ -74,7 +74,7 @@ namespace LangLine.Commands
                 }
                 catch
                 {
-                    var log = new ExceptionLog(_index, new Exception($"Внутри процедуры {Name} произошла ошибка (в строке {_index})"));
+                    var log = new ExceptionLog(_index, new Exception($"Внутри процедуры {Name} произошла ошибка (в строке {_index+1})"));
                     Context.LogException(log);
                 }
             }
