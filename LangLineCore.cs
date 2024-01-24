@@ -44,6 +44,7 @@ namespace LangLine
             InterpreterVariables = new Dictionary<string, InterpreterVariable>();
             InterpreterModule = new Interpreter(this);
             MainField = new FieldModel(this, 21, 21);
+            StackTrace = new List<ExceptionLog>();
         }
 
         /// <summary>
@@ -56,6 +57,7 @@ namespace LangLine
             InterpreterVariables = new Dictionary<string, InterpreterVariable>();
             InterpreterModule = new Interpreter(this);
             MainField = new FieldModel(this, width, height);
+            StackTrace = new List<ExceptionLog>();
         }
 
         /// <summary>

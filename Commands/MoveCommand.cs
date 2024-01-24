@@ -46,7 +46,14 @@ namespace LangLine.Commands
         public void StartCommand(string args)
         {
             ConfigureArguments(args);
-            Execute();
+            try
+            {
+                Execute();
+            } catch
+            {
+                var log = new ExceptionLog(_index, new WallException());
+                Context.LogException(log);
+            }
         }
     }
 }

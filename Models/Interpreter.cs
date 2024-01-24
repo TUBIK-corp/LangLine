@@ -217,7 +217,7 @@ namespace LangLine.Models
             }
 
             var command_type = TypifyCommand(command_name);
-            var command = (IICommand)Activator.CreateInstance(command_type, args: new { Context, iline.Index });
+            var command = (IICommand)Activator.CreateInstance(command_type, Context, iline.Index );
 
             if (command is IIBlockCommand)
                 skipCount = ((IIBlockCommand)command).InitializeBlock(iline.Index);
