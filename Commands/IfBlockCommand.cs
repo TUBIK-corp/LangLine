@@ -57,7 +57,7 @@ namespace LangLine.Commands
                 case Direction.DOWN:
                     return Context.MainField.IsWallDown();
                 default:
-                    return false;
+                    return default;
             }
         }
 

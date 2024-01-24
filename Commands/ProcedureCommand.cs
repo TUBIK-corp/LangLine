@@ -36,7 +36,7 @@ namespace LangLine.Commands
         public void ConfigureArguments(string str_arguments)
         {
             object name = null;
-            if (str_arguments.Split(' ').Length > 0)
+            if (str_arguments.Split(' ').Length > 1)
             {
                 var log = new ExceptionLog(_index, new InvalidArgumentsException());
                 Context.LogException(log);

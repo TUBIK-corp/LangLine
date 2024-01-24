@@ -232,7 +232,7 @@ namespace LangLine.Models
         /// </summary>
         /// <param name="index">Номер строки</param>
         /// <param name="ex">Сообщение ошибки</param>
-        public void ProcessException(int index, Exception ex)
+        public void ProcessException(int index)
         {
             OnException?.Invoke(new ExceptionEventArgs(index-1, ex.Message));
         }
@@ -271,7 +271,7 @@ namespace LangLine.Models
                 catch (Exception ex)
                 {
                     isSuccess = false;
-                    ProcessException(CommandList[i].Index+1, ex);
+                    ProcessException(CommandList[i].Index+1);
                     break;
                 }
             }
