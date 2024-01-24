@@ -90,7 +90,7 @@ namespace LangLine
         /// <summary>
         /// StackTrace для логирования ошибок. 
         /// </summary>
-        public List<ExceptionLog> StackTrace { get; private set; }                           
+        public List<ExceptionLog> StackTrace { get; set; }                           
                              
         /// <summary>
         /// Логирование возникающих ошибок в StackTrace, навигация через throw.

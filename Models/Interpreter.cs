@@ -234,7 +234,7 @@ namespace LangLine.Models
         /// <param name="ex">Сообщение ошибки</param>
         public void ProcessException(int index)
         {
-            OnException?.Invoke(new ExceptionEventArgs(index-1, ex.Message));
+            OnException?.Invoke(new ExceptionEventArgs(index-1, ""));
         }
 
         public int CurrentNest { get; private set; }
