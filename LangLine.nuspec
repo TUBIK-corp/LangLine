@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>1.0.2.6</version>
+    <version>1.0.2.12</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -16,5 +16,6 @@
   </metadata>
   <files>
     <file src="Images\LangLine_Normal.png" target="Images" />
+    <file src="bin\Release\LangLine.xml" target="lib\net48" />
   </files>
 </package>

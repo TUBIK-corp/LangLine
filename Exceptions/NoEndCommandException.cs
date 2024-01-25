@@ -8,6 +8,6 @@ namespace LangLine.Exceptions
 {
     public class NoEndCommandException : Exception
     {
-        public NoEndCommandException(string command) : base($"Отсутсвует закрывающая команда {command}") { }
+        public NoEndCommandException(string command) : base($"Отсутствует закрывающая команда {command}") { }
     }
 }

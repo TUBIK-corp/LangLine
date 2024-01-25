@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
+using LangLine.Exceptions;
 
 namespace LangLine.Models
 {
@@ -53,6 +54,9 @@ namespace LangLine.Models
         }
     }
 
+    /// <summary>
+    /// Класс интерпретатора.
+    /// </summary>
     public class Interpreter
     {
         public delegate void InterpreterEventHandler<T>(T args);
@@ -60,12 +64,20 @@ namespace LangLine.Models
         public event InterpreterEventHandler<CompletedEventArgs> OnCompleted;
         public event InterpreterEventHandler<CustomEventArgs> OnCustomEvent;
 
+        /// <summary>
+        /// Проверяет, обрабатываются ли где-нибудь ошибки.
+        /// </summary>
+        /// <returns></returns>
         public bool IsExceptionsHandling()
         {
             return OnException.GetInvocationList().Length != 0;
         }
 
+        /// <summary>
+        /// Список команд.
+        /// </summary>
         public List<InterpreterLine> CommandList { get; private set; }
+
 
         public Dictionary<string, Type> CommandTypeBinds { get; private set; }
         public LangLineCore Context { get; private set; }
@@ -220,10 +232,14 @@ namespace LangLine.Models
             var command = (IICommand)Activator.CreateInstance(command_type, Context, iline.Index );
 
             if (command is IIBlockCommand)
+            {
                 skipCount = ((IIBlockCommand)command).InitializeBlock(iline.Index);
+                IncrementCurrentNest();
+            }
 
             command.StartCommand(arguments_line);
-
+            if(command is IIBlockCommand) 
+                DecrementCurrentNest();
             return skipCount;
         }
 
@@ -237,15 +253,35 @@ namespace LangLine.Models
             OnException?.Invoke(new ExceptionEventArgs(index-1, ""));
         }
 
-        public int CurrentNest { get; private set; }
+        /// <summary>
+        /// Вложенность в текущей функции.
+        /// </summary>
+        public int CurrentNest { get; private set; } = 1;
 
-        public void AddToCurrentNest(int value)
+        /// <summary>
+        /// Повышает значение вложенности в текущей функции.
+        /// </summary>
+        public void IncrementCurrentNest()
         {
             if(CurrentNest+1 > Context.MaxNesting)
             {
-
+                var log = new ExceptionLog(GetCurrentIndex(), new OutOfMaxNestingException(Context.MaxNesting));
+                Context.LogException(log);
             }
-            CurrentNest+=value;
+            CurrentNest+=1;
+        }
+        
+        /// <summary>
+        /// Понижает значение вложенности в текущей функции.
+        /// </summary>
+        /// <exception cref="Exception"></exception>
+        public void DecrementCurrentNest()
+        {
+            if(CurrentNest-1 < 0)
+            {
+                throw new Exception("Нарушена логика изменения вложенности.");
+            }
+            CurrentNest-=1;
         }
         /// <summary>
         /// Запуск программы с загруженными командами
@@ -253,7 +289,7 @@ namespace LangLine.Models
         /// <exception cref="Exception">Командный список пуст</exception>
         public bool StartProgram()
         {
-            CurrentNest = 0;
+            CurrentNest = 1;
             bool isSuccess = true;
 
             if (CommandList == null)

@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 namespace LangLine.Exceptions
 {
     public class OutOfMaxNestingException : Exception {
-        public OutOfMaxNestingException(string message) : base(message) { }
+        public OutOfMaxNestingException(int maxNesting) : base($"Превышена максимальная вложенность {maxNesting}") { }
     }
 }
