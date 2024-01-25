@@ -189,7 +189,8 @@ namespace LangLine.Models
             var command = code.ToUpper();
             if (!CommandTypeBinds.ContainsKey(command))
             {
-                throw new Exception("Command is not defined");
+                var log = new ExceptionLog(GetCurrentIndex(), new CommandIsNotDefinedException());
+                Context.LogException(log);
             }
 
             return CommandTypeBinds[command];
@@ -256,7 +257,7 @@ namespace LangLine.Models
         /// <summary>
         /// Вложенность в текущей функции.
         /// </summary>
-        public int CurrentNest { get; private set; } = 1;
+        public int CurrentNest { get; private set; } = 0;
 
         /// <summary>
         /// Повышает значение вложенности в текущей функции.
@@ -289,13 +290,9 @@ namespace LangLine.Models
         /// <exception cref="Exception">Командный список пуст</exception>
         public bool StartProgram()
         {
-            CurrentNest = 1;
+            CurrentNest = 0;
             bool isSuccess = true;
 
-            if (CommandList == null)
-            {
-                throw new Exception("CommandList is empty");
-            }
 
             for (int i = 0; i < CommandList.Count; i++)
             {
