@@ -97,6 +97,7 @@
     <Compile Include="Exceptions\OutOfMaxNestingException.cs" />
     <Compile Include="Exceptions\OutOfMaxVariablesValueException.cs" />
     <Compile Include="Exceptions\ProcedureExistsException.cs" />
+    <Compile Include="Exceptions\ProcedureInBlockException.cs" />
     <Compile Include="Exceptions\UnknownEndException.cs" />
     <Compile Include="Exceptions\WallException.cs" />
     <Compile Include="Interfaces\IIBlockCommand.cs" />

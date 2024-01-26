@@ -37,14 +37,21 @@ namespace LangLine.Commands
                 var log = new ExceptionLog(_index, new InvalidArgumentsException());
                 Context.LogException(log);
             }
-            if (int.TryParse(Name[0].ToString(), out int res))
+            try
             {
-                var log = new ExceptionLog(_index, new InvalidNameOfVariableException(), $"Переменная \"{Name}\" не может начинаться с цифры \"{res}\"");
-                Context.LogException(log);
-            }
-            if((int)Value > Context.MaxValueOfVariables)
+                if (int.TryParse(Name[0].ToString(), out int res))
+                {
+                    var log = new ExceptionLog(_index, new InvalidNameOfVariableException(), $"Переменная \"{Name}\" не может начинаться с цифры \"{res}\"");
+                    Context.LogException(log);
+                }
+                if (Convert.ToInt32(Value) > Context.MaxValueOfVariables)
+                {
+                    var log = new ExceptionLog(_index, new OutOfMaxVariablesValueException(Context.MaxValueOfVariables), $"Переменная \"{Name}\" слишком большая.");
+                    Context.LogException(log);
+                }
+            } catch(Exception ex)
             {
-                var log = new ExceptionLog(_index, new OutOfMaxVariablesValueException(Context.MaxValueOfVariables), $"Переменная \"{Name}\" слишком большая.");
+                var log = new ExceptionLog(_index, ex);
                 Context.LogException(log);
             }
         }
@@ -59,6 +66,7 @@ namespace LangLine.Commands
             {
                 Context.CreateNewVariable(Name, new InterpreterVariable(Value));
             }
+
         }
 
         public void StartCommand(string args)

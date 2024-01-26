@@ -12,6 +12,13 @@ namespace LangLine.Commands.Helpers
 {
     public static class BlockCommand
     {
+        /// <summary>
+        /// Команда инициализации блочной команды.
+        /// </summary>
+        /// <typeparam name="T">Тип команды.</typeparam>
+        /// <param name="Command">Расширение передаёт команду.</param>
+        /// <param name="index">Берёт с определённого индекса. </param>
+        /// <returns></returns>
         public static int InitBlock<T>(this T Command, int index) where T : IIBlockCommand
         {
             Command.Block = Command.Context.InterpreterModule.TakeFrom(index);
@@ -25,6 +32,11 @@ namespace LangLine.Commands.Helpers
             for (int i = 0; i < Command.Block.Count; i++)
             {
                 var line = Command.Block[i];
+                if (line.Line.ToLower().StartsWith("procedure"))
+                {
+                    var log = new ExceptionLog(line.Index, new ProcedureInBlockException());
+                    Command.Context.LogException(log);
+                }
                 if (line.Line.ToLower().StartsWith(Command.CommandName.ToLower()))
                     skipEndsCount++;
                 else if (i == Command.Block.Count - 1 &&

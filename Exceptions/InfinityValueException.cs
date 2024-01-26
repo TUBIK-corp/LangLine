@@ -6,5 +6,4 @@ namespace LangLine.Exceptions
     {
         public InfinityValueException() : base("Указанное значение приводит к бесконечности.") { }
     }
-
 }

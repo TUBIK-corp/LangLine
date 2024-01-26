@@ -8,6 +8,8 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using LangLine.Exceptions;
+using System.Windows.Shapes;
+using System.Data;
 
 namespace LangLine.Models
 {
@@ -245,6 +247,59 @@ namespace LangLine.Models
         }
 
         /// <summary>
+        /// Инициализирует все процедуры в любом месте программы, кроме .
+        /// </summary>
+        public bool ExtractAndInitializeProcedures()
+        {
+            var filteredLines = CommandList.Where(line => line.Line.ToLower().StartsWith("procedure")).ToList();
+
+            foreach ( var line in filteredLines)
+            {
+
+                try
+                {
+                    int openBlockCommandCount = 0;
+                    int closeBlockCommandCount = 0;
+                    foreach (var before in CommandList.Where(command => command.Index < line.Index))
+                    {
+                        if (string.IsNullOrWhiteSpace(before.Line))
+                            continue;
+                        var split = before.Line.Split(' ');
+
+
+
+                        var typed = TypifyCommand(split[0]);
+                        var command = (IICommand)Activator.CreateInstance(typed, Context, line.Index);
+                        if (command is IIBlockCommand)
+                        {
+                            openBlockCommandCount++;
+                        }
+                        else if (command is EndCommand)
+                        {
+                            closeBlockCommandCount++;
+                        }
+                    }
+                    if (closeBlockCommandCount >= openBlockCommandCount)
+                    {
+                        var skipLines = StartLine(line);
+
+                        CommandList.RemoveAll(command => command.Index >= line.Index && command.Index < line.Index + skipLines + 1);
+                    }
+                    else
+                    {
+                        var log = new ExceptionLog(line.Index, new ProcedureInBlockException(openBlockCommandCount, closeBlockCommandCount));
+                        Context.LogException(log);
+                    }
+                } catch
+                {
+                    ProcessException(line.Index);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Вызывает привязанные делегаты к OnException
         /// </summary>
         /// <param name="index">Номер строки</param>
@@ -293,6 +348,8 @@ namespace LangLine.Models
             CurrentNest = 0;
             bool isSuccess = true;
 
+            if (!ExtractAndInitializeProcedures())
+                return false;
 
             for (int i = 0; i < CommandList.Count; i++)
             {
