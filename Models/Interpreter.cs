@@ -15,13 +15,21 @@ namespace LangLine.Models
 {
     public class InterpreterLine
     {
-        public int Index { get; set; }
-        public string Line { get; set; }
+        public int Index { get; private set; }
+        public string Line { get; private set; }
+        public bool Extracted { get; private set; } = false;
 
         public InterpreterLine(int index, string line)
         {
             Index = index;
             Line = line;
+        }
+        /// <summary>
+        /// Позволяет установить флаг об игноре команды, так как она уже обработана.
+        /// </summary>
+        public void SetExtracted()
+        {
+            Extracted = true;
         }
     }
     public class ExceptionEventArgs
@@ -211,17 +219,23 @@ namespace LangLine.Models
         /// Запускает код и возвращает количество строчек, которые надо пропустить
         /// </summary>
         /// <param name="iline"></param>
+        /// <param name="ignoreExtracted"></param>
         /// <returns></returns>
-        public int StartLine(InterpreterLine iline)
+        public int StartLine(InterpreterLine iline, bool ignoreExtracted = true)
         {
+            if (iline.Extracted && !ignoreExtracted)
+                return 0;
+
             _currentIndex = iline.Index;
             var line = iline.Line;
             int skipCount = 0;
 
+
+
             if (string.IsNullOrWhiteSpace(line))
                 return 0;
 
-            line = line.TrimStart(' ');
+            line = line.Trim(' ');
             var parts = line.Split(' ');
             var command_name = parts[0];
             var arguments_line = "";
@@ -251,25 +265,24 @@ namespace LangLine.Models
         /// </summary>
         public bool ExtractAndInitializeProcedures()
         {
-            var filteredLines = CommandList.Where(line => line.Line.ToLower().StartsWith("procedure")).ToList();
+            var filteredLines = CommandList.Where(line => line.Line.Trim().ToLower().StartsWith("procedure")).ToList();
 
             foreach ( var line in filteredLines)
             {
-
                 try
                 {
                     int openBlockCommandCount = 0;
                     int closeBlockCommandCount = 0;
                     foreach (var before in CommandList.Where(command => command.Index < line.Index))
                     {
-                        if (string.IsNullOrWhiteSpace(before.Line))
+                        if (string.IsNullOrWhiteSpace(before.Line.Trim()))
                             continue;
-                        var split = before.Line.Split(' ');
+                        var split = before.Line.Trim().Split(' ');
 
+                        _currentIndex = before.Index;
 
-
-                        var typed = TypifyCommand(split[0]);
-                        var command = (IICommand)Activator.CreateInstance(typed, Context, line.Index);
+                        var typed = TypifyCommand(split[0].Trim());
+                        var command = (IICommand)Activator.CreateInstance(typed, Context, before.Index);
                         if (command is IIBlockCommand)
                         {
                             openBlockCommandCount++;
@@ -283,7 +296,12 @@ namespace LangLine.Models
                     {
                         var skipLines = StartLine(line);
 
-                        CommandList.RemoveAll(command => command.Index >= line.Index && command.Index < line.Index + skipLines + 1);
+                        CommandList.ForEach(command => { 
+                            if(command.Index >= line.Index && command.Index < line.Index + skipLines + 1)
+                            {
+                                command.SetExtracted();
+                            }
+                        });
                     }
                     else
                     {
@@ -355,7 +373,7 @@ namespace LangLine.Models
             {
                 try
                 {
-                    var skip = StartLine(CommandList[i]);
+                    var skip = StartLine(CommandList[i], ignoreExtracted: false);
                     i += skip;
                 }
                 catch (Exception ex)

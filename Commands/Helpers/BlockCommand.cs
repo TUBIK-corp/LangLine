@@ -32,20 +32,20 @@ namespace LangLine.Commands.Helpers
             for (int i = 0; i < Command.Block.Count; i++)
             {
                 var line = Command.Block[i];
-                if (line.Line.ToLower().StartsWith("procedure"))
+                if (line.Line.Trim().ToLower().StartsWith("procedure"))
                 {
                     var log = new ExceptionLog(line.Index, new ProcedureInBlockException());
                     Command.Context.LogException(log);
                 }
-                if (line.Line.ToLower().StartsWith(Command.CommandName.ToLower()))
+                if (line.Line.Trim().ToLower().StartsWith(Command.CommandName.ToLower()))
                     skipEndsCount++;
                 else if (i == Command.Block.Count - 1 &&
-                    !line.Line.ToLower().Equals(Command.BlockEndName.ToLower()))
+                    !line.Line.Trim().ToLower().Equals(Command.BlockEndName.ToLower()))
                 {
                     var log = new ExceptionLog(Command.Context.GetCurrentIndex(), new NoEndCommandException(Command.BlockEndName));
                     Command.Context.LogException(log);
                 }
-                else if (line.Line.ToLower().Equals(Command.BlockEndName.ToLower()))
+                else if (line.Line.Trim().ToLower().Equals(Command.BlockEndName.ToLower()))
                 {
                     if (skipEndsCount > 0)
                     {
