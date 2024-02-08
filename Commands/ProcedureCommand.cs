@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using System.Text.RegularExpressions;
 
 namespace LangLine.Commands
 {
@@ -16,6 +17,8 @@ namespace LangLine.Commands
         public delegate void ExecuteProcedure();
         public string CommandName { get; } = "PROCEDURE";
         public string BlockEndName { get; } = "ENDPROC";
+
+        public bool IsBusy { get; set; } = false;
 
         public List<InterpreterLine> Block { get; set; } = new List<InterpreterLine>();
 
@@ -53,6 +56,11 @@ namespace LangLine.Commands
                 var log = new ExceptionLog(_index, new ProcedureExistsException());
                 Context.LogException(log);
             }
+            if (Regex.IsMatch((string)name, "^[a-zA-Z0-9]*$"))
+            {
+                var log = new ExceptionLog(_index, new InvalidNameOfVariableException(), $"Переменная \"{Name}\" не может иметь отличную от ");
+                Context.LogException(log);
+            }
             Name = (string)name;
         }
 
@@ -65,6 +73,7 @@ namespace LangLine.Commands
 
         public void ExecuteBlock()
         {
+            IsBusy = true;
             for (int i = 0; i < Block.Count; i++)
             {
                 try
@@ -74,10 +83,12 @@ namespace LangLine.Commands
                 }
                 catch
                 {
+                    IsBusy = false;
                     var log = new ExceptionLog(_index, new Exception($"Внутри процедуры {Name} произошла ошибка (в строке {_index+1})"));
                     Context.LogException(log);
                 }
             }
+            IsBusy = false;
         }
 
         public int InitializeBlock(int index)

@@ -5,6 +5,8 @@ using LangLine.Exceptions;
 using LangLine.Models;
 using System;
 using System.Reflection;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace LangLine.Commands
 {
@@ -37,21 +39,19 @@ namespace LangLine.Commands
                 var log = new ExceptionLog(_index, new InvalidArgumentsException());
                 Context.LogException(log);
             }
-            try
+            if (int.TryParse(Name[0].ToString(), out int res))
             {
-                if (int.TryParse(Name[0].ToString(), out int res))
-                {
-                    var log = new ExceptionLog(_index, new InvalidNameOfVariableException(), $"Переменная \"{Name}\" не может начинаться с цифры \"{res}\"");
-                    Context.LogException(log);
-                }
-                if (Convert.ToInt32(Value) > Context.MaxValueOfVariables)
-                {
-                    var log = new ExceptionLog(_index, new OutOfMaxVariablesValueException(Context.MaxValueOfVariables), $"Переменная \"{Name}\" слишком большая.");
-                    Context.LogException(log);
-                }
-            } catch(Exception ex)
+                var log = new ExceptionLog(_index, new InvalidNameOfVariableException(), $"Переменная \"{Name}\" не может начинаться с цифры \"{res}\"");
+                Context.LogException(log);
+            }
+            if (Regex.IsMatch(Name, "^[a-zA-Z0-9]*$"))
             {
-                var log = new ExceptionLog(_index, ex);
+                var log = new ExceptionLog(_index, new InvalidNameOfVariableException(), $"Переменная \"{Name}\" не может иметь отличную от ");
+                Context.LogException(log);
+            } 
+            if (Convert.ToInt32(Value) > Context.MaxValueOfVariables)
+            {
+                var log = new ExceptionLog(_index, new OutOfMaxVariablesValueException(Context.MaxValueOfVariables), $"Переменная \"{Name}\" слишком большая.");
                 Context.LogException(log);
             }
         }

@@ -7,6 +7,7 @@ using LangLine.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace LangLine.Commands
 {
@@ -41,7 +42,12 @@ namespace LangLine.Commands
                 var log = new ExceptionLog(_index, new InvalidArgumentsException());
                 Context.LogException(log);
             }
-            if(Repeats <= 0)
+            if (Repeats > Context.MaxValueOfVariables)
+            {
+                var log = new ExceptionLog(_index, new OutOfMaxVariablesValueException(Context.MaxValueOfVariables), $"Значение аргумента не должно превышать {Context.MaxValueOfVariables}.");
+                Context.LogException(log);
+            }
+            if (Repeats <= 0)
             {
                 var log = new ExceptionLog(_index, new InfinityValueException());
                 Context.LogException(log);

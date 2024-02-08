@@ -27,11 +27,17 @@ namespace LangLine.Commands
         public void ConfigureArguments(string str_arguments)
         {
             bool notFound = false;
+            bool isBusy = false;
             try
             {
                 if (Context.ContainsVariable(str_arguments))
                 {
                     Executes = (ExecuteProcedure)(Context.InterpreterVariables[str_arguments].Value);
+                    var target = (ProcedureCommand)Executes.Target;
+                    if(target.IsBusy)
+                    {
+                        isBusy = true;
+                    }
                 }
                 else
                 {
@@ -41,6 +47,11 @@ namespace LangLine.Commands
             catch
             {
                 var log = new ExceptionLog(_index, new InvalidArgumentsException());
+                Context.LogException(log);
+            }
+            if(isBusy)
+            {
+                var log = new ExceptionLog(_index, new ProcedureCallInsideException());
                 Context.LogException(log);
             }
             if(notFound)

@@ -38,9 +38,9 @@ namespace LangLine.Models
         {
             Width = width;
             Height = height;
-            User = new UserModel(0, 0);
-            Positions = new List<Point>();
             Context = context;
+            User = new UserModel((int)Context.SpawnPoint.X, (int)Context.SpawnPoint.Y);
+            Positions = new List<Point>();
         }
 
         public List<Point> GetPositions() => Positions;
@@ -58,7 +58,7 @@ namespace LangLine.Models
         /// </summary>
         public void ClearPositions()
         {
-            User = new UserModel(0, 0);
+            User = new UserModel((int)Context.SpawnPoint.X, (int)Context.SpawnPoint.Y);
             Positions.Clear();
         }
 
@@ -112,9 +112,13 @@ namespace LangLine.Models
             }
         }
 
+        /// <summary>
+        /// Вызывает ошибку для трассировка стека 
+        /// </summary>
+        /// <exception cref="Exception"></exception>
         public void ThrowException()
         {
-            throw new Exception("WALL!");
+            throw new Exception("Исполнитель упёрся в стенку!");
         }
        
 

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 
@@ -32,9 +33,14 @@ namespace LangLine
         public int MaxNesting { get; private set; } = 1000;
 
         /// <summary>
-        /// Максимально возможное значение переменной (По умолчанию 10000000).
+        /// Максимально возможное значение переменной (По умолчанию 10000000). 
         /// </summary>
         public int MaxValueOfVariables { get; private set; } = 10000000;
+        
+        /// <summary>
+        /// Точка запуска исполнителя.
+        /// </summary>
+        public Point SpawnPoint { get; private set; } = new Point(0, 0);
 
         /// <summary>
         /// Основной модуль запуска програмного кода на языке LangLine.
@@ -58,6 +64,15 @@ namespace LangLine
             InterpreterModule = new Interpreter(this);
             MainField = new FieldModel(this, width, height);
             StackTrace = new List<ExceptionLog>();
+        }
+
+        /// <summary>
+        /// Устанавливает точку запуска исполнителя.
+        /// </summary>
+        /// <param name="newPoint"></param>
+        public void SetSpawnPoint(Point newPoint)
+        {
+            SpawnPoint = newPoint;
         }
 
         /// <summary>
@@ -120,12 +135,24 @@ namespace LangLine
             MaxValueOfVariables = maxVariable;
         }
 
+
+
         /// <summary>
         /// Зарегистрировать собственную команду.
         /// </summary>
         /// <param name="name">Название команды для кода.</param>
         /// <param name="type">Тип команды для инициализации.</param>
         public void RegisterCommand(string name, Type type)
+        {
+            InterpreterModule.AddCommand(name, type);
+        }
+        
+        /// <summary>
+        /// Отменить регистрацию существующей команды.
+        /// </summary>
+        /// <param name="name">Название команды для кода.</param>
+        /// <param name="type">Тип команды для инициализации.</param>
+        public void UnregisterCommand(string name, Type type)
         {
             InterpreterModule.AddCommand(name, type);
         }

@@ -141,6 +141,30 @@ namespace LangLine.Models
             CommandTypeBinds.Add(name, type);
             Console.WriteLine($"Команда {name} добавлена.");
         }
+
+         /// <summary>
+        /// Удаляет команду из словаря команд.
+        /// </summary>
+        /// <param name="name">Название, по которому вызывается команда.</param>
+        public void RemoveCommand(string name)
+        {
+            if(!CommandTypeBinds.ContainsKey(name))
+                throw new UnregisteredCommand(name);
+            CommandTypeBinds.Remove(name);
+            Console.WriteLine($"Команда {name} удалена.");
+        }
+        
+        /// <summary>
+        /// Возвращает, зарегистрирована ли команда.
+        /// </summary>
+        /// <param name="name">Название команды</param>
+        /// <returns>True - зарегистрировна, False - незарегистрирована.</returns>
+        public bool IsCommandRegistered(string name)
+        {
+            return CommandTypeBinds.ContainsKey(name);
+        }
+
+
         /// <summary>
         /// Устанавливает список команд.
         /// </summary>
