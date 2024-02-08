@@ -7,6 +7,7 @@ using System;
 using System.Reflection;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows;
 
 namespace LangLine.Commands
 {
@@ -44,11 +45,16 @@ namespace LangLine.Commands
                 var log = new ExceptionLog(_index, new InvalidNameOfVariableException(), $"Переменная \"{Name}\" не может начинаться с цифры \"{res}\"");
                 Context.LogException(log);
             }
-            if (!Regex.IsMatch(Name, "^[a-zA-Z0-9]*$"))
+            if(!int.TryParse(Value.ToString(), out int res1))
             {
-                var log = new ExceptionLog(_index, new InvalidNameOfVariableException(), $"Переменная \"{Name}\" не может иметь отличную от ");
+                var log = new ExceptionLog(_index, new NotStatedVariableException(Value.ToString()), $"{Value.ToString()} не указана.");
                 Context.LogException(log);
-            } 
+            }
+            if (!Regex.IsMatch(Name, "^[a-zA-Z0-9_]*$"))
+            {
+                var log = new ExceptionLog(_index, new InvalidNameOfVariableException(), $"Переменная \"{Name}\" не может так называться.");
+                Context.LogException(log);
+            }
             if (Convert.ToInt32(Value) > Context.MaxValueOfVariables)
             {
                 var log = new ExceptionLog(_index, new OutOfMaxVariablesValueException(Context.MaxValueOfVariables), $"Переменная \"{Name}\" слишком большая.");

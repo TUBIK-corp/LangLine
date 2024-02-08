@@ -8,6 +8,6 @@ namespace LangLine.Exceptions
 {
     public class NotStatedVariableException : Exception
     {
-        public NotStatedVariableException(string message) : base(message) { }
+        public NotStatedVariableException(string name) : base($"Переменная {name} не найдена.") { }
     }
 }

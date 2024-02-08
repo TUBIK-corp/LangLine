@@ -56,7 +56,7 @@ namespace LangLine.Commands
                 var log = new ExceptionLog(_index, new ProcedureExistsException());
                 Context.LogException(log);
             }
-            if (!Regex.IsMatch((string)name, "^[a-zA-Z0-9]*$"))
+            if (!Regex.IsMatch((string)name, "^[a-zA-Z0-9_]*$"))
             {
                 var log = new ExceptionLog(_index, new InvalidNameOfVariableException(), $"Переменная \"{Name}\" не может иметь отличную от ");
                 Context.LogException(log);
