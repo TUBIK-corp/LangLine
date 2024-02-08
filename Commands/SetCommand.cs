@@ -44,7 +44,7 @@ namespace LangLine.Commands
                 var log = new ExceptionLog(_index, new InvalidNameOfVariableException(), $"Переменная \"{Name}\" не может начинаться с цифры \"{res}\"");
                 Context.LogException(log);
             }
-            if (Regex.IsMatch(Name, "^[a-zA-Z0-9]*$"))
+            if (!Regex.IsMatch(Name, "^[a-zA-Z0-9]*$"))
             {
                 var log = new ExceptionLog(_index, new InvalidNameOfVariableException(), $"Переменная \"{Name}\" не может иметь отличную от ");
                 Context.LogException(log);
